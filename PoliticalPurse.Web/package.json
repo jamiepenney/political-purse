@@ -1,0 +1,55 @@
+{
+  "name": "politicalpurse",
+  "version": "0.0.1",
+  "description": "Landing page for the Political Purse",
+  "watch": {
+    "build:css": {
+      "patterns": [
+        "PoliticalPurse.Web/web/**/*.scss",
+        "PoliticalPurse.Web/web/*.scss"
+      ],
+      "extensions": "scss"
+    },
+    "build:js": {
+      "patterns": [
+        "PoliticalPurse.Web/web/**/*.js",
+        "PoliticalPurse.Web/web/*.js"
+      ]
+    }
+  },
+  "scripts": {
+    "build:js": "mkdirp wwwroot/js && browserify web/js/index.js -o wwwroot/js/main.js -t [ babelify --presets [ es2015 ] ]",
+    "scss": "mkdirp wwwroot/css && node-sass --output-style compressed -o wwwroot/css web/scss",
+    "autoprefixer": "postcss -u autoprefixer --autoprefixer.browsers '> 5%, ie 9' -r wwwroot/css/*",
+    "build:css": "run-s scss autoprefixer",
+    "build": "run-p build:*",
+    "clean:css": "rimraf wwwroot/css/*",
+    "clean:js": "rimraf wwwroot/js/main.js",
+    "clean": "run-p clean:*",
+    "watch": "npm-watch",
+    "postinstall": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamiepenney/politicalpurse.git"
+  },
+  "author": "Jamie Penney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamiepenney/politicalpurse/issues"
+  },
+  "homepage": "https://github.com/jamiepenney/politicalpurse#readme",
+  "dependencies": {
+    "autoprefixer": "^6.4.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "lodash": "4.17.4",
+    "mkdirp": "^0.5.1",
+    "node-sass": "^3.8.0",
+    "npm-run-all": "^3.0.0",
+    "npm-watch": "^0.1.6",
+    "postcss-cli": "^2.5.2",
+    "rimraf": "^2.5.4"
+  }
+}

@@ -1,0 +1,45 @@
+@model PoliticalPurse.Web.ViewModels.DataViewModel
+
+<div class="container-fluid mt-4" id="data">
+    <div class="row">
+        <div class="col">
+            <h1 class="js-header"></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col js-data"></div>
+    </div>
+    <div class="js-charts">
+    </div>
+</div>
+
+@section scripts {
+<script>
+    var datasource = "@Model.DefaultDatasource";
+
+    function drawChart(){
+        Data.loadData(datasource, document.getElementById("data"));
+    }
+
+    if(location.hash && location.hash != "#"){
+        datasource = location.hash.substring(1); // remove #
+        updateActiveLink();
+    }
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    $(window).on("hashchange", function() {
+        if(!location.hash || location.hash == "#") {
+            datasource = "@Model.DefaultDatasource";
+        }
+        else {
+            datasource = location.hash.substring(1); // remove #
+        }
+
+        updateActiveLink();
+
+        Data.loadData(datasource, document.getElementById("data"));
+    });
+</script>
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <title>
+        @if (IsSectionDefined("title")) {
+            <text>@(RenderSection("title")) - The Political Purse</text>
+        }
+        else {
+            <text>The Political Purse</text>
+        }
+        </title>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/main.css" asp-append-version="true">
+        <link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            #mc_embed_signup{
+                background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;
+            }
+            #mc_embed_signup form{
+                padding: 0;
+            }
+            body #mc_embed_signup div.mce_inline_error {
+                margin-top: 0.5rem;
+                color: #d9534f;
+                font-weight: bold;
+                background: white;
+                border: 1px solid #d9534f;
+                border-radius: 3px;
+            }
+        </style>
+
+        <meta property="og:title" content="The Political Purse" />
+        <meta name="description" content="Providing transparency on where New Zealand's political parties get their funding" />
+        <meta property="og:description" content="Providing transparency on where New Zealand's political parties get their funding" />
+        <link rel="canonical" href="https://www.thepoliticalpurse.org.nz/" />
+        <meta property="og:url" content="https://www.thepoliticalpurse.org.nz/" />
+        <meta property="og:site_name" content="thepoliticalpurse.org.nz" />
+
+        <script type="application/ld+json">
+        {"@@context": "http://schema.org",
+        "@@type": "WebSite",
+        "name": "thepoliticalpurse.org.nz",
+        "headline": "New Zealand political party donation database",
+        "description": "Providing transparency on where New Zealand's political parties get their funding",
+        "url": "https://www.thepoliticalpurse.org.nz/"}</script>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="/">The Political Purse</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/donations" id="navbarDropdownMenuLink" data-toggle="dropdown"     aria-haspopup="true" aria-expanded="false">
+                            Donations
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/donations#byparty">By Party</a>
+                            <a class="dropdown-item" href="/donations#bydonee">By Donee</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/parties" id="navbarDropdownMenuLink" data-toggle="dropdown"     aria-haspopup="true" aria-expanded="false">
+                            Parties
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/parties#national">National</a>
+                            <a class="dropdown-item" href="/parties#labour">Labour</a>
+                            <a class="dropdown-item" href="/parties#greens">Greens</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div>
+        @RenderBody()
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <div class="row footer-row">
+                    <span>The Political Purse &copy; @(DateTime.UtcNow.Year)</span>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script>
+            function updateActiveLink() {
+                var url = window.location.toString().toLowerCase();
+                $('.navbar-nav .nav-item, .navbar-nav .dropdown-item').removeClass('active');
+
+                $('.navbar-nav a').filter(function() {
+                    return url == (this.href || "").toLowerCase();
+                }).parent().addClass('active');
+
+                $('.navbar-nav a.dropdown-item').filter(function() {
+                    return url == (this.href || "").toLowerCase();
+                }).addClass('active');
+
+                $('').filter(function() {
+                    return url == (this.href || "").toLowerCase();
+                }).parent().addClass('active');
+
+                // also make the higher links as active
+                url = (window.location.origin + window.location.pathname).toLowerCase();
+                $('ul.navbar-nav a').filter(function() {
+                    return url == (this.href || "").toLowerCase();
+                }).parent().addClass('active');
+            }
+
+            updateActiveLink();
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            // Load the Visualization API and the corechart package.
+            google.charts.load('upcoming', {'packages':['corechart', 'geochart', 'table']});
+        </script>
+        <script src="/js/main.js" asp-append-version="true"></script>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>
