@@ -37,6 +37,8 @@ namespace PoliticalPurse.Web
             services.Configure<DatabaseOptions>(Configuration);
 
             services.AddSingleton<DatabaseService>();
+            services.AddSingleton<DonationService>();
+            services.AddSingleton<PartyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,9 +7,9 @@ namespace PoliticalPurse.Web.Controllers
     [Route("donations/{version}")]
     public class DonationController : Controller
     {
-        private DatabaseService _database;
+        private DonationService _database;
 
-        public DonationController(DatabaseService database)
+        public DonationController(DonationService database)
         {
             _database = database;
         }

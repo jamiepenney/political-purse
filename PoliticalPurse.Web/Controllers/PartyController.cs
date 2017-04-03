@@ -7,28 +7,41 @@ namespace PoliticalPurse.Web.Controllers
     [Route("party/{version}")]
     public class PartyController : Controller
     {
-        private DatabaseService _database;
+        private PartyService _database;
 
-        public PartyController(DatabaseService database)
+        public PartyController(PartyService database)
         {
             _database = database;
         }
 
-        [HttpGet("search")]
-        public async Task<ActionResult> Search(DonationQuery query)
+        private async Task<ActionResult> RunQuery(PartyQuery query)
         {
-            var donations = await _database.SearchDonations(query);
-            return Json(donations);
+            var data = await _database.GetParty(query);
+            return Json(new {
+                structure = DonationToParty.Structure,
+                data
+            });
         }
 
         [HttpGet("national")]
-        public async Task<ActionResult> ByParty(DonationQuery query)
+        public async Task<ActionResult> National(PartyQuery query)
         {
-            var donations = await _database.GetDonationsByParty(query);
-            return Json(new {
-                structure = PartyDonations.Structure,
-                data = donations
-            });
+            query.Party = "New Zealand National Party";
+            return await RunQuery(query);
+        }
+
+        [HttpGet("labour")]
+        public async Task<ActionResult> Labour(PartyQuery query)
+        {
+            query.Party = "New Zealand Labour Party";
+            return await RunQuery(query);
+        }
+
+        [HttpGet("greens")]
+        public async Task<ActionResult> Greens(PartyQuery query)
+        {
+            query.Party = "Green Party of Aotearoa New Zealand";
+            return await RunQuery(query);
         }
     }
 }
