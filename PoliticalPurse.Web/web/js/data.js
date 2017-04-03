@@ -1,7 +1,7 @@
 var loading = require('./loading');
 var _ = require('lodash')
 
-function loadData(type, element){
+function loadData(datasource, query, element){
     var $el = $(element);
 
     $el.find('.js-data').empty();
@@ -9,7 +9,7 @@ function loadData(type, element){
 
     loading.start($el);
 
-    $.ajax('/donations/v1/' + type)
+    $.ajax('/'+datasource+'/v1/' + query)
     .done(function(result){
         loading.end($el);
 

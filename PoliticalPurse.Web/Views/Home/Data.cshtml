@@ -15,14 +15,14 @@
 
 @section scripts {
 <script>
-    var datasource = "@Model.DefaultDatasource";
+    var query = "@Model.DefaultQuery";
 
     function drawChart(){
-        Data.loadData(datasource, document.getElementById("data"));
+        Data.loadData('@Model.Datasource', query, document.getElementById("data"));
     }
 
     if(location.hash && location.hash != "#"){
-        datasource = location.hash.substring(1); // remove #
+        query = location.hash.substring(1); // remove #
         updateActiveLink();
     }
 
@@ -31,15 +31,15 @@
 
     $(window).on("hashchange", function() {
         if(!location.hash || location.hash == "#") {
-            datasource = "@Model.DefaultDatasource";
+            query = "@Model.DefaultQuery";
         }
         else {
-            datasource = location.hash.substring(1); // remove #
+            query = location.hash.substring(1); // remove #
         }
 
         updateActiveLink();
 
-        Data.loadData(datasource, document.getElementById("data"));
+        Data.loadData('@Model.Datasource', query, document.getElementById("data"));
     });
 </script>
 }

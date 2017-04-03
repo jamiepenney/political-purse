@@ -2,11 +2,13 @@ namespace PoliticalPurse.Web.ViewModels
 {
     public class DataViewModel
     {
-        public string DefaultDatasource { get; set; }
+        public string Datasource { get; set; }
+        public string DefaultQuery { get; set; }
 
-        public DataViewModel(string defaultDatasource)
+        public DataViewModel(string datasource, string defaultQuery)
         {
-            DefaultDatasource = defaultDatasource;
+            Datasource = datasource;
+            DefaultQuery = defaultQuery;
         }
     }
 }

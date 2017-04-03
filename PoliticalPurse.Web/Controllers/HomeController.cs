@@ -21,13 +21,13 @@ namespace PoliticalPurse.Web.Controllers
         [HttpGet("donations")]
         public IActionResult Donations()
         {
-            return View("Data", new DataViewModel("byparty"));
+            return View("Data", new DataViewModel("donations", "byparty"));
         }
 
         [HttpGet("parties")]
         public IActionResult Parties()
         {
-            return View("Data", new DataViewModel("national"));
+            return View("Data", new DataViewModel("party", "national"));
         }
 
         [HttpGet("error")]
