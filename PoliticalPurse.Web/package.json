@@ -17,10 +17,14 @@
       ]
     }
   },
+  "browserslist": [
+    "> 5%",
+    "ie 9"
+  ],
   "scripts": {
     "build:js": "mkdirp wwwroot/js && browserify web/js/index.js -o wwwroot/js/main.js -t [ babelify --presets [ es2015 ] ]",
     "scss": "mkdirp wwwroot/css && node-sass --output-style compressed -o wwwroot/css web/scss",
-    "autoprefixer": "postcss -u autoprefixer --autoprefixer.browsers '> 5%, ie 9' -r wwwroot/css/*",
+    "autoprefixer": "postcss -u autoprefixer -r wwwroot/css/*",
     "build:css": "run-s scss autoprefixer",
     "build": "run-p build:*",
     "clean:css": "rimraf wwwroot/css/*",
