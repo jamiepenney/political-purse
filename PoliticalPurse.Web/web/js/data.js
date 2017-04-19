@@ -131,11 +131,13 @@ function drawTable($el, result)
     datatable.addRows(rows);
 
     var columnIndex = 0;
-    for(var key in structure.properties) {
-        var property = structure.properties[key];
+    for (var key in dtProperties) {
+        var property = dtProperties[key];
+        console.log("checking column " + columnIndex + ": " + property.name);
         if(property.formatter) {
             var formatter = new google.visualization.NumberFormat({pattern: property.formatter});
             formatter.format(datatable, columnIndex);
+            console.log("formatting column " + columnIndex);
         }
         columnIndex++;
     }
