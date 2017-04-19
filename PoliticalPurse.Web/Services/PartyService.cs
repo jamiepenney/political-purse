@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using System.Data;
 using Microsoft.Extensions.Options;
-using Npgsql;
 using Dapper;
-using PoliticalPurse.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,6 +32,29 @@ namespace PoliticalPurse.Web.Services
         public string Party { get; set; }
         public int? Year { get; set; }
         public string TextSearch { get; set; }
+
+        public string Description
+        {
+            get
+            {
+                string val;
+                if (Year.HasValue)
+                {
+                    val = "For " + Year;
+                }
+                else
+                {
+                    val = "1996 - 2015";
+                }
+
+                if (!string.IsNullOrEmpty(TextSearch))
+                {
+                    val += " containing " + TextSearch;
+                }
+
+                return val;
+            }
+        }
     }
 
     public class DonationToParty
@@ -44,9 +64,9 @@ namespace PoliticalPurse.Web.Services
         public decimal Total { get; set; }
         public int NumberOfDonations { get; set; }
 
-        public readonly static DataDefinition Structure = new DataDefinition()
+        public static readonly DataDefinition Structure = new DataDefinition
         {
-            Name = "Donations to Party",
+            Name = "Declared Donations to the {{party}}",
             Datatable = new DatatableDefinition {
                 InitialSort = "total",
                 InitialSortDirection = SortDirection.desc

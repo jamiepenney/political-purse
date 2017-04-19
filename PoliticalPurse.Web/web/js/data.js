@@ -1,5 +1,25 @@
 var loading = require('./loading');
-var _ = require('lodash')
+var _ = require('lodash');
+
+function parseName(structure, query) {
+    var name = structure.name;
+
+    if (query) {
+        var index = name.indexOf("{{");
+        while (index >= 0) {
+            var endIndex = name.indexOf("}}", index);
+
+            var propName = name.substring(index + 2, endIndex);
+            var replaceValue = query[propName];
+            if (replaceValue) {
+                name = name.replace("{{" + propName + "}}", replaceValue + "");
+            }
+            index = name.indexOf("{{");
+        }
+    }
+    
+    return name;
+}
 
 function loadData(datasource, query, element){
     var $el = $(element);
@@ -15,8 +35,11 @@ function loadData(datasource, query, element){
 
         var structure = result.structure;
 
-        $el.find('.js-header').text(structure.name);
-
+        $el.find('.js-header').text(parseName(structure, result.query));
+        if (result.query) {
+            $el.find('.js-sub-header').text(result.query.description);
+        }
+        
         drawTable($el, result);
 
         for(var i = 0; i < structure.charts.length; i++) {
@@ -40,7 +63,7 @@ function drawPie($el, result, chart)
     var row = createChartRow($el);
 
     var datatable = getGenericDatatable(result, chart);
-    var pie = new google.visualization.PieChart(row[0]);
+    var pie = new window.google.visualization.PieChart(row[0]);
     pie.draw(datatable, {
         title: chart.title,
         pieHole: 0.4,
@@ -56,7 +79,7 @@ function drawBar($el, result, chart)
     var row = createChartRow($el);
 
     var datatable = getGenericDatatable(result, chart, 7);
-    var bar = new google.visualization.ColumnChart(row[0]);
+    var bar = new window.google.visualization.ColumnChart(row[0]);
     bar.draw(datatable, {
         title: chart.title,
         width: "100%",
@@ -68,7 +91,7 @@ function getGenericDatatable(result, chart, limit) {
     var structure = result.structure;
     var data = result.data;
 
-    var datatable = new google.visualization.DataTable();
+    var datatable = new window.google.visualization.DataTable();
 
     var labelProperty = _.find(structure.properties, {key: chart.label});
     datatable.addColumn(labelProperty.type, labelProperty.name);
@@ -107,7 +130,7 @@ function drawTable($el, result)
     var structure = result.structure;
     var data = result.data;
 
-    var datatable = new google.visualization.DataTable();
+    var datatable = new window.google.visualization.DataTable();
     var dtProperties = _.filter(structure.properties, function(p) {
         return !_.includes(structure.datatable.skipProperties, p.key);
     });
@@ -119,12 +142,12 @@ function drawTable($el, result)
     }
 
     var rows = [];
-    for(var i = 0; i < data.length; i++) {
+    for(var d = 0; d < data.length; d++) {
         var row = [];
-        for(var key in dtProperties)
+        for (var j = 0; j < dtProperties.length; j++)
         {
-            var prop = dtProperties[key];
-            row.push(data[i][prop.key]);
+            var prop = dtProperties[j];
+            row.push(data[d][prop.key]);
         }
         rows.push(row);
     }
@@ -135,21 +158,21 @@ function drawTable($el, result)
         var property = dtProperties[key];
         console.log("checking column " + columnIndex + ": " + property.name);
         if(property.formatter) {
-            var formatter = new google.visualization.NumberFormat({pattern: property.formatter});
+            var formatter = new window.google.visualization.NumberFormat({pattern: property.formatter});
             formatter.format(datatable, columnIndex);
             console.log("formatting column " + columnIndex);
         }
         columnIndex++;
     }
 
-    var table = new google.visualization.Table($el.find('.js-data')[0]);
+    var table = new window.google.visualization.Table($el.find('.js-data')[0]);
     table.draw(datatable, {
         showRowNumber: true, width: "100%", page: true,
-        sortColumn: _.findIndex(structure.properties, function(p) { return p.key === structure.datatable.initialSort }),
-        sortAscending: structure.datatable.initialSortDirection === "asc",
+        sortColumn: _.findIndex(structure.properties, function(p) { return p.key === structure.datatable.initialSort; }),
+        sortAscending: structure.datatable.initialSortDirection === "asc"
     });
 }
 
 module.exports = {
     loadData: loadData
-}
+};

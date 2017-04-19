@@ -7,7 +7,7 @@ namespace PoliticalPurse.Web.Controllers
     [Route("party/{version}")]
     public class PartyController : Controller
     {
-        private PartyService _database;
+        private readonly PartyService _database;
 
         public PartyController(PartyService database)
         {
@@ -19,6 +19,7 @@ namespace PoliticalPurse.Web.Controllers
             var data = await _database.GetParty(query);
             return Json(new {
                 structure = DonationToParty.Structure,
+                query,
                 data
             });
         }
