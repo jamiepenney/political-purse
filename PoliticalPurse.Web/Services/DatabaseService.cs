@@ -2,16 +2,12 @@ using System.Collections.Generic;
 using System.Data;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using Dapper;
-using PoliticalPurse.Web.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PoliticalPurse.Web.Services
 {
     public class DatabaseService
     {
-        private DatabaseOptions _options;
+        private readonly DatabaseOptions _options;
 
         public DatabaseService(IOptions<DatabaseOptions> options)
         {
@@ -50,6 +46,31 @@ namespace PoliticalPurse.Web.Services
         public Structure Properties { get; set; }
         public DatatableDefinition Datatable { get; set; }
         public List<ChartDefinition> Charts { get; set; }
+        public QueryDefinition Query { get; set; }
+    }
+
+    public class QueryDefinition
+    {
+        public List<QueryParameterDefinition> Parameters { get; set; }
+    }
+
+    public enum QueryType { year }
+    public class QueryParameterDefinition
+    {
+        public string Title { get; set; }
+        public string Name { get; set; }
+        public QueryType Type { get; set; }
+        public bool Optional { get; set; }
+        public object MinValue { get; set; }
+        public object MaxValue { get; set; }
+
+        public QueryParameterDefinition(string title, string name, QueryType type, bool optional)
+        {
+            Title = title;
+            Name = name;
+            Type = type;
+            Optional = optional;
+        }
     }
 
     public class DatatableDefinition
@@ -67,7 +88,7 @@ namespace PoliticalPurse.Web.Services
         public abstract string Type { get; }
         public string Title { get; set; }
 
-        public ChartDefinition(string title) {
+        protected ChartDefinition(string title) {
             Title = title;
         }
     }

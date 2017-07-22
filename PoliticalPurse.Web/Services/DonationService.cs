@@ -80,7 +80,7 @@ namespace PoliticalPurse.Web.Services
                 }
                 else
                 {
-                    val = "1996 - 2015";
+                    val = "1996 - 2017";
                 }
 
                 if (!string.IsNullOrEmpty(TextSearch))
@@ -123,6 +123,17 @@ namespace PoliticalPurse.Web.Services
                 new BarChartDefinition("Number of Donations"){
                     Label = "party", Data = "numberOfDonations"
                 },
+            },
+            Query = new QueryDefinition
+            {
+                Parameters = new List<QueryParameterDefinition>
+                {
+                    new QueryParameterDefinition("Year", "year", QueryType.year, false)
+                    {
+                        MinValue = 1996,
+                        MaxValue = 2017
+                    }
+                }
             }
         };
     }
