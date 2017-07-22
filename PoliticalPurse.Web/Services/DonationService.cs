@@ -39,10 +39,10 @@ namespace PoliticalPurse.Web.Services
             {
                 return (await connection.QueryAsync<PartyDonations>(
                     @"SELECT party, SUM(amount) as total, SUM(number_of_donations) as numberOfDonations,
-                             SUM(amount) / COALESCE(SUM(number_of_donations), COUNT(id), 1) as average
+                             SUM(amount) / SUM(number_of_donations) as average
                       FROM donation
                       WHERE number_of_donations > 0
-                      AND   @Year IS NULL or year = @Year
+                      AND   (@Year IS NULL OR year = @Year)
                       GROUP BY party", query
                 )).ToList();
             }
@@ -54,10 +54,10 @@ namespace PoliticalPurse.Web.Services
             {
                 return (await connection.QueryAsync<PartyAndDoneeDonations>(
                     @"SELECT party, donee, SUM(amount) as total, SUM(number_of_donations) as numberOfDonations,
-                             SUM(amount) / COALESCE(SUM(number_of_donations), COUNT(id), 1) as average
+                             SUM(amount) / SUM(number_of_donations) as average
                       FROM donation
                       WHERE number_of_donations > 0
-                      AND   @Year IS NULL or year = @Year
+                      AND   (@Year IS NULL OR year = @Year)
                       GROUP BY party, donee", query
                 )).ToList();
             }
