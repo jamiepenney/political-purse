@@ -15,8 +15,15 @@ namespace PoliticalPurse.Web
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            if (env.IsDevelopment())
+            {
+                builder = builder.AddUserSecrets<Startup>();
+            }
+
+            builder = builder.AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 

@@ -17,11 +17,12 @@ namespace PoliticalPurse.Web
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .Build();
 
-            var port = Environment.GetEnvironmentVariable("PORT");
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "6000";
 
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
                 .UseKestrel()
+                .UseIISIntegration()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseUrls("http://*:" + port)
                 .UseStartup<Startup>()
