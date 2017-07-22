@@ -16,7 +16,7 @@ namespace PoliticalPurse.Web.Services
             {
                 return (await connection.QueryAsync<DonationToParty>(
                     @"SELECT donee, SUM(amount) as total, SUM(number_of_donations) as numberOfDonations,
-                             SUM(amount) / SUM(number_of_donations) as average
+                             SUM(amount) / COALESCE(SUM(number_of_donations), COUNT(id), 1) as average
                       FROM donation
                       WHERE number_of_donations > 0
                       AND   party = @Party
