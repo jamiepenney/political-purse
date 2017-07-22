@@ -71,13 +71,13 @@ function generateQueryBox($el, query) {
     var uriParams = uri.search(true);
 
     _.forEach(query.parameters, parameter => {
-        let $param = $(`<div><label for="query_${parameter.name}">${parameter.title}</label></div>`);
+        let $param = $(`<div class="form-group row"><label class="col-2 col-form-label" for="query_${parameter.name}">${parameter.title}</label></div>`);
 
         switch(parameter.type) {
             case "year":
                 var years = _.range(parameter.minValue, parameter.maxValue + 1)
                     .map(year => `<option value="${year}" ${uriParams[parameter.name] === year.toString() ? "selected" : ""}>${year}</option>`);
-                var $select = $(`<select id="query_${parameter.name} name="${parameter.name}"><option value="">All</option></select>`).append(years).appendTo($param);
+                var $select = $(`<select id="query_${parameter.name}" name="${parameter.name}" class="form-control"><option value="">All</option></select>`).append(years);
                 $select.on('change', function() {
                     const newVal = $select.val();
                     var newUri = new URI(!location.hash || location.hash === "#" ? "" : location.hash.substring(1));
@@ -86,6 +86,7 @@ function generateQueryBox($el, query) {
                     newUri.search(newSearch);
                     location.hash = newUri.toString();
                 });
+                $(`<div class="col-4"></div>`).append($select).appendTo($param);
                 break;
         }
         $el.append($param);
