@@ -26,6 +26,9 @@ function loadData(datasource, query, element){
 
     $el.find('.js-data').empty();
     $el.find('.js-charts').empty();
+    $el.find('.js-header').empty();
+    $el.find('.js-sub-header').empty();
+    $el.find('.js-query').empty();
 
     loading.start($el);
 
@@ -38,6 +41,10 @@ function loadData(datasource, query, element){
         $el.find('.js-header').text(parseName(structure, result.query));
         if (result.query) {
             $el.find('.js-sub-header').text(result.query.description);
+        }
+
+        if (structure.query) {
+            generateQueryBox($el.find('.js-query'), structure.query);
         }
         
         drawTable($el, result);
@@ -54,6 +61,34 @@ function loadData(datasource, query, element){
                     break;
             }
         }
+    });
+}
+
+function generateQueryBox($el, query) {
+    $el.empty();
+
+    var uri = new URI(!location.hash || location.hash === "#" ? "" : location.hash.substring(1));
+    var uriParams = uri.search(true);
+
+    _.forEach(query.parameters, parameter => {
+        let $param = $(`<div><label for="query_${parameter.name}">${parameter.title}</label></div>`);
+
+        switch(parameter.type) {
+            case "year":
+                var years = _.range(parameter.minValue, parameter.maxValue + 1)
+                    .map(year => `<option value="${year}" ${uriParams[parameter.name] === year.toString() ? "selected" : ""}>${year}</option>`);
+                var $select = $(`<select id="query_${parameter.name} name="${parameter.name}"><option value="">All</option></select>`).append(years).appendTo($param);
+                $select.on('change', function() {
+                    const newVal = $select.val();
+                    var newUri = new URI(!location.hash || location.hash === "#" ? "" : location.hash.substring(1));
+                    var newSearch = uri.search(true);
+                    newSearch[parameter.name] = newVal;
+                    newUri.search(newSearch);
+                    location.hash = newUri.toString();
+                });
+                break;
+        }
+        $el.append($param);
     });
 }
 
