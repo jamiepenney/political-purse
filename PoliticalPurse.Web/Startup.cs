@@ -43,6 +43,7 @@ namespace PoliticalPurse.Web
             services.AddOptions();
             services.Configure<DatabaseOptions>(Configuration);
 
+            services.AddSingleton<UserService>();
             services.AddSingleton<DatabaseService>();
             services.AddSingleton<DonationService>();
             services.AddSingleton<PartyService>();
