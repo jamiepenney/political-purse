@@ -1,3 +1,4 @@
+﻿@{ bool signedIn = (bool?)ViewData["SignedIn"] == true; }
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -52,8 +53,8 @@
         "url": "https://www.thepoliticalpurse.org.nz/"}</script>
 
     </head>
-    <body>
-        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+    <body class="@ViewBag.BodyClass">
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse politicalpurse-navbar">
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -64,7 +65,7 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="/donations" id="navbarDropdownMenuLink" data-toggle="dropdown"     aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="/donations" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Donations
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -73,7 +74,7 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="/parties" id="navbarDropdownMenuLink" data-toggle="dropdown"     aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="/parties" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Parties
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -83,6 +84,19 @@
                         </div>
                     </li>
                 </ul>
+                @if (signedIn)
+                {
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/parties" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @ViewData["UserName"]
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/admin/sign_out">Sign Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                }
             </div>
         </nav>
         <div>

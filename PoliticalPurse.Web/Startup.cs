@@ -1,11 +1,14 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PoliticalPurse.Web.Services;
 using Newtonsoft.Json.Converters;
+using PoliticalPurse.Web.Filters;
 
 namespace PoliticalPurse.Web
 {
@@ -33,7 +36,11 @@ namespace PoliticalPurse.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc().AddJsonOptions(options =>
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(LoginContextFilter));
+            })
+            .AddJsonOptions(options =>
             {
                 options.SerializerSettings.Converters.Add(new StringEnumConverter {
                     CamelCaseText = true
@@ -63,6 +70,30 @@ namespace PoliticalPurse.Web
             {
                 app.UseExceptionHandler("/error");
             }
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                AuthenticationScheme = "PPCookieMiddleware",
+                LoginPath = new PathString("/admin/sign_in/"),
+                AccessDeniedPath = new PathString("/admin/forbidden/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true
+            });
+
+            var supportedCultures = new[]
+            {
+                new CultureInfo("en-NZ"),
+                new CultureInfo("en-US")
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-NZ"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
 
             app.UseStaticFiles();
 
