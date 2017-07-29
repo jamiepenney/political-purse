@@ -74,8 +74,8 @@ namespace PoliticalPurse.Web
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationScheme = "PPCookieMiddleware",
-                LoginPath = new PathString("/admin/sign_in/"),
-                AccessDeniedPath = new PathString("/admin/forbidden/"),
+                LoginPath = new PathString("/user/sign_in/"),
+                AccessDeniedPath = new PathString("/user/forbidden/"),
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });

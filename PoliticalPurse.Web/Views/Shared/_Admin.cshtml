@@ -5,3 +5,11 @@
 }
 
 @RenderBody()
+
+@section header {
+    @RenderSection("header", required: false)
+}
+
+@section scripts {
+    @RenderSection("scripts", required: false)
+}
