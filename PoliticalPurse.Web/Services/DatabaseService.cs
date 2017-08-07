@@ -17,6 +17,7 @@ namespace PoliticalPurse.Web.Services
         protected IDbConnection GetConnection()
         {
             var connection = new NpgsqlConnection(BuildConnectionString(_options.DATABASE_URL));
+            connection.Open();
             return connection;
         }
 

@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml;
+using PoliticalPurse.Web.Services;
 
 namespace PoliticalPurse.Web.Controllers
 {
@@ -13,6 +10,13 @@ namespace PoliticalPurse.Web.Controllers
     [Authorize]
     public class AdminController : Controller
     {
+        private readonly DonationUpdateService _updateService;
+
+        public AdminController(DonationUpdateService updateService)
+        {
+            _updateService = updateService;
+        }
+
         [HttpGet("")]
         public IActionResult Index()
         {
@@ -22,7 +26,13 @@ namespace PoliticalPurse.Web.Controllers
         [HttpPost("donations")]
         public async Task<IActionResult> UpdateDonations(IFormFile file)
         {
-            return Json("");
+            using (var stream = file.OpenReadStream())
+            {
+                var result = await _updateService.UpdateDonations(stream);
+                return Json(new { result });
+            }
+
+            
         }
 
     }

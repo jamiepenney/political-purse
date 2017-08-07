@@ -1,13 +1,45 @@
-﻿@model object
-
-@{
-    ViewBag.Title = "Political Purse - Admin";
-}
-<div class="container mt-3">
+﻿<div class="container mt-3">
     <div class="row">
         <h2>Admin</h2>
     </div>
     <div class="row">
-
+        <a data-toggle="modal" data-target="#updateDonationsModal" href="javascript:">Update Donations</a>
     </div>
 </div>
+
+<div id="updateDonationsModal" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <form enctype="multipart/form-data" asp-controller="Admin" asp-action="UpdateDonations">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update donations</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Upload your donations.xslx file</p>
+                    <input type="file" accept=".xlsx" name="file"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary js-modal-submit" disabled>Upload file</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+        $(function () {
+            
+            $('#updateDonationsModal input[type=file]').on('change', function () {
+                $('#updateDonationsModal .js-modal-submit').attr('disabled', this.files.length === 0);
+            });
+
+        })
+    </script>    
+}
