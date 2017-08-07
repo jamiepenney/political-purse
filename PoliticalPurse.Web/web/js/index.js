@@ -1,3 +1,5 @@
+require('./libraries/tue_spinner');
+
 window.Data = require('./data');
 
 $(() => {

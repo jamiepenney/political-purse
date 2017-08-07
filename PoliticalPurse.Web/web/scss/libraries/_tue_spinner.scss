@@ -1,0 +1,77 @@
+/**
+ * Based on "Fading circle" animation from SpinKit by Tobias Ahlin
+ * https://github.com/tobiasahlin/SpinKit/blob/master/scss/spinners/10-fading-circle.scss
+ * License: MIT
+ *
+ * and some rules from "_modal.scss" of Bootstrap 4
+ * https://github.com/twbs/bootstrap/blob/v4-dev/scss/_modal.scss
+ * License: MIT
+ *
+ * The following bootstrap4 scss variables need to be set:
+ *  - $zindex-modal
+ *  - $zindex-modal-backdrop
+ *  - $modal-backdrop-bg
+ *  - $modal-backdrop-opacity
+ *
+ * Author: Christoph Singer
+ * License: MIT
+ */
+$zindex-modal:              1050 !default;
+$zindex-modal-backdrop: 	1040 !default;
+$modal-backdrop-bg:         #000 !default;
+$modal-backdrop-opacity:    .5 !default;
+
+.spinner {
+  $circleCount: 12;
+  $animationDuration: 1.2s;
+  z-index: $zindex-modal;
+
+  .sk-circle {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .sk-circle:before {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 15%;
+    height: 15%;
+    background-color: #333;
+    border-radius: 100%;
+    animation: sk-circleFadeDelay $animationDuration infinite ease-in-out both;
+  }
+
+  @for $i from 2 through $circleCount {
+    .sk-circle#{$i} { transform: rotate(360deg / $circleCount * ($i - 1)); }
+  }
+
+  @for $i from 2 through $circleCount {
+    .sk-circle#{$i}:before { animation-delay: - $animationDuration + $animationDuration / $circleCount * ($i - 1); }
+  }
+}
+
+@keyframes sk-circleFadeDelay {
+  0%, 39%, 100% { opacity: 0 }
+  40% { opacity: 1 }
+}
+
+.spinner-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-modal-backdrop;
+  background-color: $modal-backdrop-bg;
+
+  // Fade for backdrop
+  &.fade { opacity: 0; }
+  &.in { opacity: $modal-backdrop-opacity; }
+}
+.spinner-modal, .spinner, .modal-backdrop, .spinner-backdrop {
+  cursor: wait;
+}
