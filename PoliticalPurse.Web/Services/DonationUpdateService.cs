@@ -32,6 +32,10 @@ namespace PoliticalPurse.Web.Services
             {
                 var donations = GetDonationsFromExcelFile(excelFile);
 
+                if(donations == null || donations.Count == 0) {
+                    return false;
+                }
+
                 using (var connection = GetConnection())
                 using (var transaction = connection.BeginTransaction())
                 {
@@ -40,7 +44,7 @@ namespace PoliticalPurse.Web.Services
                     transaction.Commit();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -80,6 +84,10 @@ namespace PoliticalPurse.Web.Services
                     {
                         columns[cellValue] = colIndex;
                     }
+                }
+
+                if(columns.Count < headers.Length) {
+                    return null;
                 }
 
                 var donations = new List<Donation>();

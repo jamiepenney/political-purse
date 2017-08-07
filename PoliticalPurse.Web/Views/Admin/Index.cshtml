@@ -18,8 +18,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Upload your donations.xslx file</p>
-                    <input type="file" accept=".xlsx" name="file"/>
+                    <div class="form-group">
+                        <input type="file" accept=".xlsx" name="file"/>
+                        <p class="form-text text-muted">Upload your donations.xslx file</p>
+                        <div class="form-control-feedback hide">Something went wrong. Is the file in the right format?</div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary js-modal-submit" disabled>Upload file</button>
@@ -35,11 +38,49 @@
     <script>
 
         $(function () {
-            
+
             $('#updateDonationsModal input[type=file]').on('change', function () {
                 $('#updateDonationsModal .js-modal-submit').attr('disabled', this.files.length === 0);
             });
 
+            $('#updateDonationsModal form').on('submit', function (e) {
+                e.preventDefault();
+
+                var $form = $(this);
+                $form.tue_spinner('show');
+
+                $form.find('.form-control-feedback').addClass('hide');
+                $form.find('.form-group').removeClass('has-danger');
+
+                var data = new FormData();
+                data.append('file', $form.find('input[name=file]')[0].files[0]);
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST'
+                })
+                .fail(function() {
+                    $form.find('form-control-feedback').removeClass('hide');
+                })
+                .done(function(r) {
+                    if(!r || r.result === false){
+                        $form.find('.form-control-feedback').removeClass('hide');
+                        $form.find('.form-group').addClass('has-danger');
+                    } else {
+                        $('#updateDonationsModal').modal('hide');
+                    }
+                })
+                .always(function() {
+                    $form.tue_spinner('hide');
+                });
+
+                return false;
+            });
+
         })
-    </script>    
+    </script>
 }
