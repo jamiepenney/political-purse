@@ -26,13 +26,17 @@ namespace PoliticalPurse.Web.Controllers
         [HttpPost("donations")]
         public async Task<IActionResult> UpdateDonations(IFormFile file)
         {
+            if(file == null)
+            {
+                return BadRequest();
+            }
             using (var stream = file.OpenReadStream())
             {
                 var result = await _updateService.UpdateDonations(stream);
                 return Json(new { result });
             }
 
-            
+
         }
 
     }
