@@ -4,7 +4,7 @@ SELECT run_migration(2, $$
         "id" BIGSERIAL PRIMARY KEY,
         "email" TEXT NOT NULL,
         "name" TEXT NOT NULL,
-        "password_hash" TEXT NOT NULL,
+        "password_hash" TEXT NOT NULL
     );
 
 $$);
