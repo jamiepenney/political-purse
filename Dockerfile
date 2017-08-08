@@ -12,4 +12,5 @@ RUN /usr/local/bin/npm install --production && /usr/local/bin/npm run build && r
 RUN dotnet restore
 RUN dotnet build --configuration Release
 
+EXPOSE 5000
 CMD ["dotnet", "run", "--configuration", "Release"]
