@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using PoliticalPurse.Web.Models;
 using PoliticalPurse.Web.Services;
+
 
 namespace PoliticalPurse.Web.Controllers
 {
     [Route("user")]
     public class LoginController : Controller
     {
-        private const string AuthenticationScheme = "PPCookieMiddleware";
         private readonly UserService _userService;
 
         public LoginController(UserService userService)
@@ -24,8 +26,8 @@ namespace PoliticalPurse.Web.Controllers
         [HttpGet("sign_in")]
         public async Task<IActionResult> SignIn()
         {
-            var result = await HttpContext.Authentication.AuthenticateAsync(AuthenticationScheme);
-            if (result?.Identity?.IsAuthenticated == true)
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (result?.Succeeded == true)
             {
                 return RedirectToAction("Index", "Admin");
             }
@@ -51,12 +53,13 @@ namespace PoliticalPurse.Web.Controllers
             //_logger.LogInformation("Login succeeded for '{model.Email}'");
 
             var principal = GetClaimsPrincipal(user);
-            await HttpContext.Authentication.SignInAsync(
-                AuthenticationScheme,
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
                 principal,
                 new AuthenticationProperties
                 {
                     IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
                 });
             return RedirectToAction("Index", "Admin");
         }
@@ -70,14 +73,14 @@ namespace PoliticalPurse.Web.Controllers
                 new Claim(ClaimTypes.Sid, user.Id.ToString(CultureInfo.InvariantCulture)),
                 new Claim(ClaimTypes.Email, user.Email),
             };
-            principal.AddIdentity(new ClaimsIdentity(claims, "local"));
+            principal.AddIdentity(new ClaimsIdentity(claims));
             return principal;
         }
 
         [HttpGet("sign_out")]
         public async Task<IActionResult> Signout()
         {
-            await HttpContext.Authentication.SignOutAsync(AuthenticationScheme);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("SignIn");
         }

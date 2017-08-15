@@ -1,7 +1,9 @@
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,13 @@ namespace PoliticalPurse.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(o =>
+                {
+                    o.LoginPath = new PathString("/user/sign_in");
+                    o.LogoutPath = new PathString("/user/sign_out");
+                });
+
             // Add framework services.
             services.AddMvc(options =>
             {
@@ -72,14 +81,12 @@ namespace PoliticalPurse.Web
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                AuthenticationScheme = "PPCookieMiddleware",
-                LoginPath = new PathString("/user/sign_in/"),
-                AccessDeniedPath = new PathString("/user/forbidden/"),
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+
+            app.UseAuthentication();
 
             var supportedCultures = new[]
             {

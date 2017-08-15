@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,17 +16,17 @@ namespace PoliticalPurse.Web.Filters
 
         public async Task<AuthenticationContext> GetAuthenticationContextFromHttpContext(HttpContext context)
         {
-            var principal = await context.Authentication.AuthenticateAsync("PPCookieMiddleware");
-            if (principal?.Identity?.IsAuthenticated != true)
+            var result = await context.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (result == null || !result.Succeeded)
             {
                 return null;
             }
             
             return new AuthenticationContext
             {
-                UserId = long.Parse(principal.FindFirst(c => c.Type == ClaimTypes.Sid).Value),
-                UserName = principal.FindFirst(c => c.Type == ClaimTypes.Name).Value,
-                UserEmail = principal.FindFirst(c => c.Type == ClaimTypes.Email).Value,
+                UserId = long.Parse(result.Principal.FindFirst(c => c.Type == ClaimTypes.Sid).Value),
+                UserName = result.Principal.FindFirst(c => c.Type == ClaimTypes.Name).Value,
+                UserEmail = result.Principal.FindFirst(c => c.Type == ClaimTypes.Email).Value,
             };
         }
 
