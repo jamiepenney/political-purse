@@ -64,6 +64,8 @@ namespace PoliticalPurse.Web
             services.AddSingleton<DonationService>();
             services.AddSingleton<DonationUpdateService>();
             services.AddSingleton<PartyService>();
+
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

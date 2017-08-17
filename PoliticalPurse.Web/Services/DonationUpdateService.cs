@@ -7,6 +7,7 @@ using PoliticalPurse.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PoliticalPurse.Web.Util;
 
@@ -24,7 +25,12 @@ namespace PoliticalPurse.Web.Services
         private const string YearColumn = "Year";
         private const string DonationWorksheetName = "General";
 
-        public DonationUpdateService(IOptions<DatabaseOptions> options) : base(options) {}
+        private readonly ILogger<DonationUpdateService> _logger;
+
+        public DonationUpdateService(IOptions<DatabaseOptions> options, ILogger<DonationUpdateService> logger) : base(options)
+        {
+            _logger = logger;
+        }
 
         public async Task<bool> UpdateDonations(Stream excelFile)
         {
@@ -32,7 +38,11 @@ namespace PoliticalPurse.Web.Services
             {
                 var donations = GetDonationsFromExcelFile(excelFile);
 
-                if(donations == null || donations.Count == 0) {
+                if(donations == null) {
+                    return false;
+                }
+                if(donations.Count == 0) {
+                    _logger.LogWarning("No donations in uploaded file");
                     return false;
                 }
 
@@ -44,8 +54,9 @@ namespace PoliticalPurse.Web.Services
                     transaction.Commit();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e, "Exception while processing donations");
                 return false;
             }
             return true;
@@ -87,6 +98,7 @@ namespace PoliticalPurse.Web.Services
                 }
 
                 if(columns.Count < headers.Length) {
+                    _logger.LogWarning("Donation file does not match expected format");
                     return null;
                 }
 

@@ -1,0 +1,15 @@
+[Unit]
+Description=Political Purse website
+
+[Service]
+WorkingDirectory=/var/app/current
+ExecStart=/usr/bin/dotnet /var/app/current/PoliticalPurse.Web.dll
+Restart=always
+RestartSec=10  # Restart service after 10 seconds if dotnet service crashes
+SyslogIdentifier=politicalpurse-web
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=PORT=5000
+
+[Install]
+WantedBy=multi-user.target

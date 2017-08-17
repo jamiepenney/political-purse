@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PoliticalPurse.Web.Models;
 using PoliticalPurse.Web.Services;
 
@@ -18,9 +19,12 @@ namespace PoliticalPurse.Web.Controllers
     {
         private readonly UserService _userService;
 
-        public LoginController(UserService userService)
+        private readonly ILogger<LoginController> _logger;
+
+        public LoginController(UserService userService, ILogger<LoginController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpGet("sign_in")]
@@ -46,11 +50,11 @@ namespace PoliticalPurse.Web.Controllers
             var user = await _userService.CheckUser(model.Email, model.Password);
             if (user == null)
             {
-                //_logger.LogInformation("Login failed for '{model.Email}'");
+                _logger.LogWarning($"Login failed for '{model.Email}'");
                 ModelState.AddModelError("", "Email or password was incorrect");
                 return View("SignIn", new SignInViewModel(model.Email) { Failed = true });
             }
-            //_logger.LogInformation("Login succeeded for '{model.Email}'");
+            _logger.LogWarning($"Login succeeded for '{model.Email}'");
 
             var principal = GetClaimsPrincipal(user);
             await HttpContext.SignInAsync(
@@ -73,7 +77,7 @@ namespace PoliticalPurse.Web.Controllers
                 new Claim(ClaimTypes.Sid, user.Id.ToString(CultureInfo.InvariantCulture)),
                 new Claim(ClaimTypes.Email, user.Email),
             };
-            principal.AddIdentity(new ClaimsIdentity(claims));
+            principal.AddIdentity(new ClaimsIdentity(claims, "Basic"));
             return principal;
         }
 
