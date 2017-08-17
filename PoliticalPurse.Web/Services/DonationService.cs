@@ -80,7 +80,7 @@ namespace PoliticalPurse.Web.Services
                 }
                 else
                 {
-                    val = "1996 - 2017";
+                    val = "1996 - 2016";
                 }
 
                 if (!string.IsNullOrEmpty(TextSearch))
@@ -131,7 +131,7 @@ namespace PoliticalPurse.Web.Services
                     new QueryParameterDefinition("Year", "year", QueryType.year, false)
                     {
                         MinValue = 1996,
-                        MaxValue = 2017
+                        MaxValue = 2016
                     }
                 }
             }
@@ -147,7 +147,7 @@ namespace PoliticalPurse.Web.Services
         public decimal Total { get; set; }
         public int NumberOfDonations { get; set; }
 
-        public static readonly DataDefinition Structure = new DataDefinition()
+        public static readonly DataDefinition Structure = new DataDefinition
         {
             Name = "Declared Donations by Party and Donee",
             Datatable = new DatatableDefinition {
