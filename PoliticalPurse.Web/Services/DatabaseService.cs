@@ -96,7 +96,7 @@ namespace PoliticalPurse.Web.Services
 
     public class PieChartDefinition : ChartDefinition
     {
-        public override string Type { get { return "pie"; } }
+        public override string Type => "pie";
         public string Label { get; set; }
         public string Data { get; set; }
         public PieChartDefinition(string title) : base(title) {}
@@ -104,7 +104,7 @@ namespace PoliticalPurse.Web.Services
 
     public class BarChartDefinition : ChartDefinition
     {
-        public override string Type { get { return "bar"; } }
+        public override string Type => "bar";
         public string Label { get; set; }
         public string Data { get; set; }
         public BarChartDefinition(string title) : base(title) {}
