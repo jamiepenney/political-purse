@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  politicalpurse.web:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
