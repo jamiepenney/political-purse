@@ -1,0 +1,15 @@
+version: "3"
+services:
+  postgres:
+    image: "postgres:10.4-alpine"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=politicalpurse
+      - POSTGRES_USER=politicalpurse
+      - POSTGRES_DB=politicalpurse
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+volumes:
+  postgres-data:

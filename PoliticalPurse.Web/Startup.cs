@@ -11,28 +11,18 @@ using Microsoft.Extensions.Logging;
 using PoliticalPurse.Web.Services;
 using Newtonsoft.Json.Converters;
 using PoliticalPurse.Web.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PoliticalPurse.Web
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
-            if (env.IsDevelopment())
-            {
-                builder = builder.AddUserSecrets<Startup>();
-            }
-
-            builder = builder.AddEnvironmentVariables();
-
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -49,6 +39,7 @@ namespace PoliticalPurse.Web
             {
                 options.Filters.Add(typeof(LoginContextFilter));
             })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(options =>
             {
                 options.SerializerSettings.Converters.Add(new StringEnumConverter {
@@ -105,6 +96,7 @@ namespace PoliticalPurse.Web
                 SupportedUICultures = supportedCultures
             });
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseMvc();
