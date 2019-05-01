@@ -17,7 +17,7 @@ echo -e "\e[1m\e[34mBuild the dotnet app\e[0m"
 dotnet publish -v m -c release
 
 # Remove the appsettings.json file if it already exists, the server one should take pref
-([ -e ./bin/Release/netcoreapp2.0/publish/appsettings.json ] && rm ./bin/Release/netcoreapp2.0/publish/appsettings.json)
+([ -e ./bin/Release/netcoreapp2.1/publish/appsettings.json ] && rm ./bin/Release/netcoreapp2.1/publish/appsettings.json)
 
 # Create a new timestamp named directory for the deployment
 deploy_dir="/var/app/$(dts)"
